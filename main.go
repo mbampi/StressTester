@@ -14,14 +14,13 @@ const (
 	getAccountInfo = "http://127.0.0.1:5001/tapi/v3/?tapi_method=get_account_info"
 )
 
-type TestLevel struct {
+type Level struct {
 	fires             int
 	requestsPerSecond int
 }
-
-type TestSpecs struct {
+type Specs struct {
 	name   string
-	levels []TestLevel
+	levels []Level
 }
 
 var (
@@ -40,9 +39,9 @@ func main() {
 	errorCount = 0
 
 	startTime := time.Now()
-	specs := TestSpecs{
+	specs := Specs{
 		name: title,
-		levels: []TestLevel{
+		levels: []Level{
 			{fires: 100, requestsPerSecond: 1},
 			{fires: 100, requestsPerSecond: 5},
 			{fires: 100, requestsPerSecond: 10},
@@ -52,12 +51,12 @@ func main() {
 			{fires: 100, requestsPerSecond: 30},
 		},
 	}
-	testRequest(specs)
+	RunStressTest(specs)
 
 	log.Println("Time ", time.Since(startTime))
 }
 
-func testRequest(specs TestSpecs) {
+func RunStressTest(specs Specs) {
 	var wg sync.WaitGroup
 	for l := 0; l < len(specs.levels); l++ {
 		level := specs.levels[l]
